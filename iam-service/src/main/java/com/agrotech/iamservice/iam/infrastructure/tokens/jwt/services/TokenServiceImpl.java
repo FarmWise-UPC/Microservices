@@ -137,7 +137,9 @@ public class TokenServiceImpl implements BearerTokenService {
      * @return SecretKey the signing key
      */
     private SecretKey getSigningKey() {
-        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        String uniqueIdentifier = String.valueOf(System.currentTimeMillis());
+        String derivedSecret = secret + uniqueIdentifier;
+        byte[] keyBytes = derivedSecret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

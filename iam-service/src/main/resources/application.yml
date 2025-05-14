@@ -1,0 +1,44 @@
+server:
+  port: 8094
+
+spring:
+  application:
+    name: iam-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/agrotechdb?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 12345678
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: com.agrotech.iamservice.shared.infrastructure.persistence.jpa.configuration.strategy.SnakeCaseWithPluralizedTablePhysicalNamingStrategy
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+authorization:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration:
+      days: 31
+
+documentation:
+  application:
+    description: "@project.description@"
+    version: "@project.version@"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
