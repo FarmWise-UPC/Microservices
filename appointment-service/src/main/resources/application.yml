@@ -6,16 +6,19 @@ spring:
     name: appointment-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/appointmentDb
+    url: jdbc:mysql://localhost:3306/appointmentdb?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 12345678
   jpa:
+    show-sql: true
     hibernate:
-        ddl-auto: update
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-  config:
-    import: optional:configserver:http://localhost:8888
+      ddl-auto: update
+      naming:
+        physical-strategy: com.agrotech.appointment.shared.infrastructure.persistence.jpa.configuration.strategy.SnakeCaseWithPluralizedTablePhysicalNamingStrategy
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
 eureka:
   instance:
