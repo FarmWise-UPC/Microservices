@@ -2,13 +2,43 @@ package com.agrotech.appointment.appointment.interfaces.exceptions;
 
 import com.agrotech.appointment.appointment.domain.exceptions.*;
 import com.agrotech.appointment.shared.infrastructure.interfaces.responses.ErrorResponseDTO;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.stream.Collectors;
+
 @ControllerAdvice
 public class AppointmentExceptionsHandler {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleGlobalException(Exception e) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Internal Server Error", "Ocurrió un error inesperado.");
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException e) {
+        String errorMessage = e.getConstraintViolations().stream()
+                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .collect(Collectors.joining(", "));
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Constraint Violation", errorMessage);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+   @ExceptionHandler(AdvisorNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleAdvisorNotFoundException(AdvisorNotFoundException e) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Advisor Not Found", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FarmerNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleFarmerNotFoundException(FarmerNotFoundException e) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Farmer Not Found", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(AppointmentNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleAppointmentNotFoundException(AppointmentNotFoundException e) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO("Appointment Not Found", e.getMessage());
