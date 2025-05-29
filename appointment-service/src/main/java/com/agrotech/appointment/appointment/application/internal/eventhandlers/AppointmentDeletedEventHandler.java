@@ -1,7 +1,7 @@
 package com.agrotech.appointment.appointment.application.internal.eventhandlers;
 
-import com.agrotech.appointment.appointment.application.internal.outboundservices.acl.ExternalNotificationsService;
-import com.agrotech.appointment.appointment.application.internal.outboundservices.acl.ExternalProfilesService;
+import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalNotificationsService;
+import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalProfileService;
 import com.agrotech.appointment.appointment.domain.exceptions.AvailableDateNotFoundException;
 import com.agrotech.appointment.appointment.domain.model.commands.UpdateAvailableDateStatusCommand;
 import com.agrotech.appointment.appointment.domain.model.events.CreateNotificationByAppointmentCancelled;
@@ -18,12 +18,12 @@ import java.util.Date;
 @Service
 public class AppointmentDeletedEventHandler {
     private final ExternalNotificationsService externalNotificationsService;
-    private final ExternalProfilesService externalProfilesService;
+    private final ExternalProfileService externalProfilesService;
     private final AvailableDateCommandService availableDateCommandService;
     private final AvailableDateQueryService availableDateQueryService;
 
     public AppointmentDeletedEventHandler(ExternalNotificationsService externalNotificationsService,
-                                          ExternalProfilesService externalProfilesService,
+                                          ExternalProfileService externalProfilesService,
                                           AvailableDateCommandService availableDateCommandService,
                                           AvailableDateQueryService availableDateQueryService) {
         this.externalNotificationsService = externalNotificationsService;
@@ -44,7 +44,7 @@ public class AppointmentDeletedEventHandler {
                 () -> new AdvisorNotFoundException(availableDate.getAdvisorId())
         );
 
-        externalNotificationsService.createNotification(advisor.getUserId(), "Cita Cancelada",
+        externalNotificationsService.createNotification(advisor.userId(), "Cita Cancelada",
                 "Se ha cancelado una cita programada con un agricultor para el dia " + availableDate.getScheduledDate() + " a las " + availableDate.getStartTime(),
                 new Date());
     }

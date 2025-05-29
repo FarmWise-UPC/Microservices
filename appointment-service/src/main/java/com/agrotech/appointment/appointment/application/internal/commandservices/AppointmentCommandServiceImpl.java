@@ -1,6 +1,6 @@
 package com.agrotech.appointment.appointment.application.internal.commandservices;
 
-import com.agrotech.appointment.appointment.application.internal.outboundservices.acl.ExternalProfilesService;
+import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalProfileService;
 import com.agrotech.appointment.appointment.domain.exceptions.*;
 import com.agrotech.appointment.appointment.domain.model.aggregates.Appointment;
 import com.agrotech.appointment.appointment.domain.model.commands.CreateAppointmentCommand;
@@ -26,12 +26,12 @@ import java.util.Optional;
 @Service
 public class AppointmentCommandServiceImpl implements AppointmentCommandService {
     private final AppointmentRepository appointmentRepository;
-    private final ExternalProfilesService externalProfilesService;
+    private final ExternalProfileService externalProfilesService;
     private final ApplicationEventPublisher eventPublisher;
     private final AvailableDateQueryService availableDateQueryService;
 
     public AppointmentCommandServiceImpl(AppointmentRepository appointmentRepository,
-                                         ExternalProfilesService externalProfilesService,
+                                         ExternalProfileService externalProfilesService,
                                          ApplicationEventPublisher eventPublisher,
                                          AvailableDateQueryService availableDateQueryService) {
         this.appointmentRepository = appointmentRepository;

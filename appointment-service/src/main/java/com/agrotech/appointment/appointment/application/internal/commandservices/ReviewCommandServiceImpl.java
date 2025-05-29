@@ -1,6 +1,6 @@
 package com.agrotech.appointment.appointment.application.internal.commandservices;
 
-import com.agrotech.appointment.appointment.application.internal.outboundservices.acl.ExternalProfilesService;
+import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalProfileService;
 import com.agrotech.appointment.appointment.domain.exceptions.*;
 import com.agrotech.appointment.appointment.domain.model.commands.CreateReviewCommand;
 import com.agrotech.appointment.appointment.domain.model.commands.DeleteReviewCommand;
@@ -19,9 +19,9 @@ import java.util.Optional;
 @Service
 public class ReviewCommandServiceImpl implements ReviewCommandService {
     private final ReviewRepository reviewRepository;
-    private final ExternalProfilesService externalProfilesService;
+    private final ExternalProfileService externalProfilesService;
 
-    public ReviewCommandServiceImpl(ReviewRepository reviewRepository, ExternalProfilesService externalProfilesService) {
+    public ReviewCommandServiceImpl(ReviewRepository reviewRepository, ExternalProfileService externalProfilesService) {
         this.reviewRepository = reviewRepository;
         this.externalProfilesService = externalProfilesService;
     }

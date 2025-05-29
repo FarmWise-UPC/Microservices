@@ -1,6 +1,6 @@
 package com.agrotech.appointment.appointment.application.internal.commandservices;
 
-import com.agrotech.appointment.appointment.application.internal.outboundservices.acl.ExternalProfilesService;
+import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalProfileService;
 import com.agrotech.appointment.appointment.domain.exceptions.*;
 import com.agrotech.appointment.appointment.domain.model.commands.CreateAvailableDateCommand;
 import com.agrotech.appointment.appointment.domain.model.commands.DeleteAvailableDateCommand;
@@ -18,9 +18,9 @@ import java.util.Optional;
 @Service
 public class AvailableDateCommandServiceImpl implements AvailableDateCommandService {
     private final AvailableDateRepository availableDateRepository;
-    private final ExternalProfilesService externalProfilesService;
+    private final ExternalProfileService externalProfilesService;
 
-    public AvailableDateCommandServiceImpl(AvailableDateRepository availableDateRepository, ExternalProfilesService externalProfilesService) {
+    public AvailableDateCommandServiceImpl(AvailableDateRepository availableDateRepository, ExternalProfileService externalProfilesService) {
         this.availableDateRepository = availableDateRepository;
         this.externalProfilesService = externalProfilesService;
     }
