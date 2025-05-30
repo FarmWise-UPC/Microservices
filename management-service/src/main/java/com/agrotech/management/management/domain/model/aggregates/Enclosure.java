@@ -1,0 +1,53 @@
+package com.agrotech.management.management.domain.model.aggregates;
+
+import com.agrotech.management.management.domain.model.commands.CreateEnclosureCommand;
+import com.agrotech.management.management.domain.model.commands.UpdateEnclosureCommand;
+import com.agrotech.management.management.domain.model.entities.Animal;
+import com.agrotech.management.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Entity
+public class Enclosure extends AuditableAbstractAggregateRoot<Enclosure> {
+    @NotNull(message = "Name is required")
+    @NotBlank(message = "Name cannot be blank")
+    private String name;
+    @NotNull(message = "Capacity is required")
+    @Min(value = 1, message = "Capacity must be greater than 0")
+    private Integer capacity;
+    @NotNull(message = "Type is required")
+    @NotBlank(message = "Type cannot be blank")
+    private String type;
+
+    @NotNull
+    @Column(name = "farmer_id")
+    private Long farmerId;
+
+    @OneToMany(mappedBy = "enclosure", cascade = CascadeType.ALL)
+    private List<Animal> animals;
+
+    public Enclosure() {}
+
+    public Enclosure(CreateEnclosureCommand command, Long farmerId) {
+        this.name = command.name();
+        this.capacity = command.capacity();
+        this.type = command.type();
+        this.farmerId = farmerId;
+        this.animals = new ArrayList<>();
+    }
+
+    public Enclosure update(UpdateEnclosureCommand command) {
+        this.name = command.name();
+        this.capacity = command.capacity();
+        this.type = command.type();
+        return this;
+    }
+
+}
