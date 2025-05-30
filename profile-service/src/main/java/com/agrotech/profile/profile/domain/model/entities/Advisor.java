@@ -15,9 +15,9 @@ public class Advisor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull
+    @Column(name = "user_id")
+    private Long userId;
 
     @NotNull(message = "Rating is required")
     @Column(precision = 3, scale = 2)
@@ -27,9 +27,9 @@ public class Advisor {
         this.rating = BigDecimal.valueOf(0.00);
     }
 
-    public Advisor(User user) {
+    public Advisor(Long userId) {
         this.rating = BigDecimal.valueOf(0.00);
-        this.user = user;
+        this.userId = userId;
     }
 
     public Advisor update(UpdateAdvisorCommand command) {
@@ -37,7 +37,4 @@ public class Advisor {
         return this;
     }
 
-    public Long getUserId() {
-        return user.getId();
-    }
 }

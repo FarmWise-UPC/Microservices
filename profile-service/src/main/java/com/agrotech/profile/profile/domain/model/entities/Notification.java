@@ -21,20 +21,17 @@ public class Notification {
     @NotNull(message = "Date is required")
     private Date sendAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull
+    @Column(name = "user_id")
+    private Long userId;
 
     public Notification() {}
 
-    public Notification(CreateNotificationCommand command, User user) {
+    public Notification(CreateNotificationCommand command) {
         this.title = command.title();
         this.message = command.message();
         this.sendAt = command.sendAt();
-        this.user = user;
+        this.userId = command.userId();
     }
 
-    public Long getUserId() {
-        return this.user.getId();
-    }
 }

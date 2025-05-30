@@ -23,11 +23,11 @@ public class AdvisorCommandServiceImpl implements AdvisorCommandService {
 
     @Override
     public Long handle(CreateAdvisorCommand command, User user) {
-        var sameUser = advisorRepository.findByUser_Id(command.userId());
+        var sameUser = advisorRepository.findByUserId(command.userId());
         if (sameUser.isPresent()) {
             throw new UserAlreadyUsedException(command.userId());
         }
-        Advisor advisor = new Advisor(user);
+        Advisor advisor = new Advisor(command.userId());
         advisorRepository.save(advisor);
         return advisor.getId();
     }

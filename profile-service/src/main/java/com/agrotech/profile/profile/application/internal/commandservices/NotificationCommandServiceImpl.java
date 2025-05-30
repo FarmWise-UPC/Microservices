@@ -26,7 +26,7 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         if (user.isEmpty()) {
             throw new UserNotFoundException(command.userId());
         }
-        var notification = new Notification(command, user.get());
+        var notification = new Notification(command);
         notificationRepository.save(notification);
         return notification.getId();
     }

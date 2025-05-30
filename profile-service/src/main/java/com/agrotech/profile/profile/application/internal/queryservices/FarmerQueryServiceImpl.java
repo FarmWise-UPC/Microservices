@@ -26,7 +26,7 @@ public class FarmerQueryServiceImpl implements FarmerQueryService {
 
     @Override
     public Optional<Farmer> handle(GetFarmerByUserIdQuery query) {
-        return farmerRepository.findByUser_Id(query.userId());
+        return farmerRepository.findByUserId(query.userId());
     }
 
     @Override

@@ -31,6 +31,6 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
 
     @Override
     public List<Notification> handle(GetNotificationsByUserIdQuery query) {
-        return notificationRepository.findByUser_Id(query.userId());
+        return notificationRepository.findByUserId(query.userId());
     }
 }

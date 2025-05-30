@@ -4,6 +4,7 @@ import com.agrotech.iamservice.iam.domain.model.aggregates.User;
 import com.agrotech.profile.profile.domain.model.commands.CreateProfileCommand;
 import com.agrotech.profile.profile.domain.model.commands.UpdateProfileCommand;
 import com.agrotech.profile.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -39,15 +40,14 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     private String occupation;
     @Min(value = 0, message = "Experience must be greater than or equal to 0")
     private Integer experience;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull
+    @Column(name = "user_id")
+    private Long userId;
 
     public Profile() {
     }
 
-    public Profile(CreateProfileCommand command, User user){
+    public Profile(CreateProfileCommand command, Long userId){
         this.firstName = command.firstName();
         this.lastName = command.lastName();
         this.city = command.city();
@@ -57,7 +57,7 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
         this.photo = command.photo();
         this.occupation = command.occupation();
         this.experience = command.experience();
-        this.user = user;
+        this.userId = userId;
     }
 
     public Profile update(UpdateProfileCommand command){
@@ -73,8 +73,5 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
         return this;
     }
 
-    public Long getUserId() {
-        return this.user.getId();
-    }
 
 }

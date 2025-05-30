@@ -20,11 +20,11 @@ public class FarmerCommandServiceImpl implements FarmerCommandService {
 
     @Override
     public Long handle(CreateFarmerCommand command, User user) {
-        var sameUser = farmerRepository.findByUser_Id(command.userId());
+        var sameUser = farmerRepository.findByUserId(command.userId());
         if (sameUser.isPresent()) {
             throw new UserNotFoundException(command.userId());
         }
-        var farmer = new Farmer(command, user);
+        var farmer = new Farmer(command);
         farmerRepository.save(farmer);
         return farmer.getId();
     }

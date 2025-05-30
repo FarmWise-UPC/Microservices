@@ -13,18 +13,15 @@ public class Farmer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull
+    @Column(name = "user_id")
+    private Long userId;
 
     public Farmer() {
     }
 
-    public Farmer(CreateFarmerCommand command, User user) {
-        this.user = user;
+    public Farmer(CreateFarmerCommand command) {
+        this.userId = command.userId();
     }
 
-    public Long getUserId() {
-        return user.getId();
-    }
 }

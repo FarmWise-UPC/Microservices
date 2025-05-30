@@ -30,11 +30,11 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         if (user.isEmpty()) {
             throw new UserNotFoundException(command.userId());
         }
-        var sameUser = profileRepository.findByUser_Id(command.userId());
+        var sameUser = profileRepository.findByUserId(command.userId());
         if (sameUser.isPresent()) {
             throw new UserAlreadyUsedException(command.userId());
         }
-        Profile profile = new Profile(command, user.get());
+        Profile profile = new Profile(command, command.userId());
         profileRepository.save(profile);
         return profile.getId();
     }

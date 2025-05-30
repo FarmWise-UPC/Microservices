@@ -32,7 +32,7 @@ public class ProfileQueryServiceImpl implements ProfileQueryService {
 
     @Override
     public Optional<Profile> handle(GetProfileByUserIdQuery query) {
-        return profileRepository.findByUser_Id(query.userId());
+        return profileRepository.findByUserId(query.userId());
     }
 
     @Override

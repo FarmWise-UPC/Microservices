@@ -31,6 +31,6 @@ public class AdvisorQueryServiceImpl implements AdvisorQueryService {
 
     @Override
     public Optional<Advisor> handle(GetAdvisorByUserIdQuery query) {
-        return advisorRepository.findByUser_Id(query.userId());
+        return advisorRepository.findByUserId(query.userId());
     }
 }
