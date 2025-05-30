@@ -30,7 +30,7 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
     public Long handle(CreateReviewCommand command) {
         var advisor = externalProfilesService.fetchAdvisorById(command.advisorId());
         var farmer = externalProfilesService.fetchFarmerById(command.farmerId());
-        var existingReview = reviewRepository.findByAdvisor_IdAndFarmer_Id(command.advisorId(), command.farmerId());
+        var existingReview = reviewRepository.findByAdvisorIdAndFarmerId(command.advisorId(), command.farmerId());
         if (existingReview.isPresent()) throw new ReviewAlreadyExistsException(command.advisorId(), command.farmerId());
         if (advisor.isEmpty()) throw new AdvisorNotFoundException(command.advisorId());
         if (farmer.isEmpty()) throw new FarmerNotFoundException(command.farmerId());
@@ -59,7 +59,7 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
     }
 
     private void updateAdvisorRating(Long advisorId) {
-        var reviews = reviewRepository.findByAdvisor_Id(advisorId);
+        var reviews = reviewRepository.findByAdvisorId(advisorId);
         if (reviews.isEmpty()) return;
 
         BigDecimal totalRating = BigDecimal.ZERO;

@@ -29,16 +29,16 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 
     @Override
     public List<Review> handle(GetReviewByAdvisorIdQuery query) {
-        return reviewRepository.findByAdvisor_Id(query.advisorId());
+        return reviewRepository.findByAdvisorId(query.advisorId());
     }
 
     @Override
     public List<Review> handle(GetReviewByFarmerIdQuery query) {
-        return reviewRepository.findByFarmer_Id(query.farmerId());
+        return reviewRepository.findByFarmerId(query.farmerId());
     }
 
     @Override
     public Optional<Review> handle(GetReviewByAdvisorIdAndFarmerIdQuery query) {
-        return reviewRepository.findByAdvisor_IdAndFarmer_Id(query.advisorId(), query.farmerId());
+        return reviewRepository.findByAdvisorIdAndFarmerId(query.advisorId(), query.farmerId());
     }
 }
