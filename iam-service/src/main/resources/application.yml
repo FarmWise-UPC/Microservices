@@ -6,7 +6,7 @@ spring:
     name: iam-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/agrotechdb?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/iamdb?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 12345678
   jpa:

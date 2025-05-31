@@ -2,10 +2,12 @@ package com.agrotech.profile.profile.infrastructure.outbound.user.rest;
 
 import com.agrotech.profile.profile.infrastructure.outbound.user.dtos.UserView;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
+@Component
 public class IamRestClient {
 
     private final RestTemplate restTemplate;

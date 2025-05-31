@@ -1,7 +1,5 @@
 package com.agrotech.profile.profile.application.internal.outboundservices.acl;
 
-import com.agrotech.iamservice.iam.domain.model.aggregates.User;
-import com.agrotech.iamservice.iam.interfaces.acl.IamContextFacade;
 import com.agrotech.profile.profile.infrastructure.outbound.user.dtos.UserView;
 import com.agrotech.profile.profile.infrastructure.outbound.user.rest.IamRestClient;
 import org.springframework.stereotype.Service;
