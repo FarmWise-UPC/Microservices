@@ -1,4 +1,4 @@
-package com.agrotech.post;
+package com.agrotech;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
