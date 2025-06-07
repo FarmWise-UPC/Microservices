@@ -45,7 +45,10 @@ public class UserCommandServiceImpl implements UserCommandService {
         var user = userRepository.findByUsername(command.username());
         if (user.isEmpty()) throw new UserNotFoundException();
         if (!hashingService.matches(command.password(), user.get().getPassword())) throw new InvalidPasswordException();
-        var token = tokenService.generateToken(user.get().getUsername());
+        var roles = user.get().getRoles().stream()
+                .map(role -> role.getName())
+                .toList();
+        var token = tokenService.generateToken(user.get().getUsername(), roles);
         return Optional.of(ImmutablePair.of(user.get(), token));
     }
 
@@ -53,9 +56,15 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Transactional
     public Optional<User> handle(SignUpCommand command) {
         if (userRepository.existsByUsername(command.username())) throw new UsernameAlreadyExistsException();
-        var roles = command.roles().stream().map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new InvalidRoleException(role.getStringName()))).toList();
-        var user = new User(command.username(), hashingService.encode(command.password()), roles);
+        var user = new User(command.username(), hashingService.encode(command.password()));
         userRepository.save(user);
+        var roles = command.roles().stream()
+                .map(role -> roleRepository.findByName(role.getName())
+                        .orElseThrow(() -> new InvalidRoleException(role.getStringName())))
+                .toList();
+        user.addRoles(roles);
+        userRepository.save(user);
+
         return userRepository.findByUsername(command.username());
     }
 }

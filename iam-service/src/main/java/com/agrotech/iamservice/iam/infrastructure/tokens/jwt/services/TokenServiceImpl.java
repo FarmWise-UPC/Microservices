@@ -1,5 +1,6 @@
 package com.agrotech.iamservice.iam.infrastructure.tokens.jwt.services;
 
+import com.agrotech.iamservice.iam.domain.model.valueobjects.Roles;
 import com.agrotech.iamservice.iam.infrastructure.tokens.jwt.BearerTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -46,7 +48,10 @@ public class TokenServiceImpl implements BearerTokenService {
      */
     @Override
     public String generateToken(Authentication authentication) {
-        return buildTokenWithDefaultParameters(authentication.getName());
+        List<Roles> roles = authentication.getAuthorities().stream()
+                .map(a -> Roles.valueOf(a.getAuthority()))
+                .toList();
+        return buildTokenWithDefaultParameters(authentication.getName(), roles);
     }
 
     /**
@@ -54,8 +59,8 @@ public class TokenServiceImpl implements BearerTokenService {
      * @param username the username
      * @return String the JWT token
      */
-    public String generateToken(String username) {
-        return buildTokenWithDefaultParameters(username);
+    public String generateToken(String username, List<Roles> roles) {
+        return buildTokenWithDefaultParameters(username, roles);
     }
 
     /**
@@ -64,12 +69,16 @@ public class TokenServiceImpl implements BearerTokenService {
      * @param username the username
      * @return String the JWT token
      */
-    private String buildTokenWithDefaultParameters(String username) {
+    private String buildTokenWithDefaultParameters(String username, List<Roles> roles) {
         var issuedAt = new Date();
         var expiration = DateUtils.addDays(issuedAt, expirationDays);
         var key = getSigningKey();
+        var roleNames = roles.stream()
+                .map(Roles::name)
+                .toList();
         return Jwts.builder()
                 .subject(username)
+                .claim("roles", roleNames)
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(key)
@@ -137,9 +146,8 @@ public class TokenServiceImpl implements BearerTokenService {
      * @return SecretKey the signing key
      */
     private SecretKey getSigningKey() {
-        String uniqueIdentifier = String.valueOf(System.currentTimeMillis());
-        String derivedSecret = secret + uniqueIdentifier;
-        byte[] keyBytes = derivedSecret.getBytes(StandardCharsets.UTF_8);
+        LOGGER.info("JWT Secret usado: {}", secret);
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

@@ -2,6 +2,8 @@ server:
   port: 8094
 
 spring:
+  config:
+    import: configserver:http://localhost:8888
   application:
     name: iam-service
   datasource:

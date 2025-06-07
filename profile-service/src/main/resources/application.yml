@@ -2,6 +2,8 @@ server:
   port: 8093
 
 spring:
+  config:
+    import: configserver:http://localhost:8888
   application:
     name: profile-service
   datasource:
@@ -20,12 +22,20 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+authorization:
+  jwt:
+    secret: ${JWT_SECRET}
 eureka:
-  instance:
-    hostname: localhost
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 iam:
   api:
     url: http://localhost:8094
