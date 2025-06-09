@@ -1,6 +1,5 @@
 package com.agrotech.profile.profile.application.internal.commandservices;
 
-import com.agrotech.iamservice.iam.domain.model.aggregates.User;
 import com.agrotech.profile.profile.domain.exceptions.UserAlreadyUsedException;
 import com.agrotech.profile.profile.domain.model.commands.CreateAdvisorCommand;
 import com.agrotech.profile.profile.domain.model.commands.DeleteAdvisorCommand;
@@ -22,7 +21,7 @@ public class AdvisorCommandServiceImpl implements AdvisorCommandService {
     }
 
     @Override
-    public Long handle(CreateAdvisorCommand command, User user) {
+    public Long handle(CreateAdvisorCommand command) {
         var sameUser = advisorRepository.findByUserId(command.userId());
         if (sameUser.isPresent()) {
             throw new UserAlreadyUsedException(command.userId());

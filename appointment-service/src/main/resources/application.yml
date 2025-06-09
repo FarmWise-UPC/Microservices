@@ -2,6 +2,13 @@ server:
   port: 8090
 
 spring:
+  security:
+    user:
+      name: admin
+      password: 12345678
+      roles: ADMIN,USER
+  config:
+    import: configserver:http://localhost:8888
   application:
     name: appointment-service
   datasource:
@@ -21,11 +28,17 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
 eureka:
-  instance:
-    hostname: localhost
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    status-page-url-path: /swagger-ui/index.html
 profiles:
   api:
     url: http://localhost:8093  # El puerto 8093 es el puerto del microservicio de perfil

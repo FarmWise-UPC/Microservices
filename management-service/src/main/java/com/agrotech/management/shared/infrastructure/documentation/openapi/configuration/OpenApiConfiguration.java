@@ -17,7 +17,7 @@ public class OpenApiConfiguration {
         var openApi = new OpenAPI();
         openApi
                 .info(new Info()
-                        .title("AgroTech API")
+                        .title("Management Service")
                         .description("AgroTech RESTful API documentation.")
                         .version("v1.0.0")
                         .license(new License().name("Apache 2.0")

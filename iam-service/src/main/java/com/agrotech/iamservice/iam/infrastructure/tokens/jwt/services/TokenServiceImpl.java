@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -38,8 +37,8 @@ public class TokenServiceImpl implements BearerTokenService {
     private String secret;
 
     @Value("${authorization.jwt.expiration.days}")
-    private int expirationDays;
 
+    private int expirationDays;
     /**
      * This method generates a JWT token from an authentication object
      * @param authentication the authentication object
@@ -48,10 +47,7 @@ public class TokenServiceImpl implements BearerTokenService {
      */
     @Override
     public String generateToken(Authentication authentication) {
-        List<Roles> roles = authentication.getAuthorities().stream()
-                .map(a -> Roles.valueOf(a.getAuthority()))
-                .toList();
-        return buildTokenWithDefaultParameters(authentication.getName(), roles);
+        return buildTokenWithDefaultParameters(authentication.getName());
     }
 
     /**
@@ -59,8 +55,8 @@ public class TokenServiceImpl implements BearerTokenService {
      * @param username the username
      * @return String the JWT token
      */
-    public String generateToken(String username, List<Roles> roles) {
-        return buildTokenWithDefaultParameters(username, roles);
+    public String generateToken(String username) {
+        return buildTokenWithDefaultParameters(username);
     }
 
     /**
@@ -69,16 +65,12 @@ public class TokenServiceImpl implements BearerTokenService {
      * @param username the username
      * @return String the JWT token
      */
-    private String buildTokenWithDefaultParameters(String username, List<Roles> roles) {
+    private String buildTokenWithDefaultParameters(String username) {
         var issuedAt = new Date();
         var expiration = DateUtils.addDays(issuedAt, expirationDays);
         var key = getSigningKey();
-        var roleNames = roles.stream()
-                .map(Roles::name)
-                .toList();
         return Jwts.builder()
                 .subject(username)
-                .claim("roles", roleNames)
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(key)

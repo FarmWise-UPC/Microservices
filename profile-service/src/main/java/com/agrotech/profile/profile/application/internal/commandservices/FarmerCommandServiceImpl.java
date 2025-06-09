@@ -1,6 +1,5 @@
 package com.agrotech.profile.profile.application.internal.commandservices;
 
-import com.agrotech.iamservice.iam.domain.model.aggregates.User;
 import com.agrotech.profile.profile.domain.model.commands.CreateFarmerCommand;
 import com.agrotech.profile.profile.domain.model.commands.DeleteFarmerCommand;
 import com.agrotech.profile.profile.domain.model.entities.Farmer;
@@ -19,7 +18,7 @@ public class FarmerCommandServiceImpl implements FarmerCommandService {
     }
 
     @Override
-    public Long handle(CreateFarmerCommand command, User user) {
+    public Long handle(CreateFarmerCommand command) {
         var sameUser = farmerRepository.findByUserId(command.userId());
         if (sameUser.isPresent()) {
             throw new UserNotFoundException(command.userId());

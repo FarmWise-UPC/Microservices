@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RestController
 @RequestMapping(value="api/v1/reviews", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "Reviews", description = "Review Management Endpoints")

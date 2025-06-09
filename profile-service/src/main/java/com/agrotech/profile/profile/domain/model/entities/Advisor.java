@@ -1,6 +1,7 @@
 package com.agrotech.profile.profile.domain.model.entities;
 
 import com.agrotech.iamservice.iam.domain.model.aggregates.User;
+import com.agrotech.profile.profile.domain.model.commands.CreateAdvisorCommand;
 import com.agrotech.profile.profile.domain.model.commands.UpdateAdvisorCommand;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +31,11 @@ public class Advisor {
     public Advisor(Long userId) {
         this.rating = BigDecimal.valueOf(0.00);
         this.userId = userId;
+    }
+
+    public Advisor(CreateAdvisorCommand createAdvisorCommand) {
+        this.userId = createAdvisorCommand.userId();
+        this.rating = BigDecimal.valueOf(0.00);
     }
 
     public Advisor update(UpdateAdvisorCommand command) {

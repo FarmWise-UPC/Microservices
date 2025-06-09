@@ -14,10 +14,9 @@ public interface TokenService {
      * Generate a token for a given username
      *
      * @param username the username
-     * @param roles
      * @return String the token
      */
-    String generateToken(String username, List<Roles> roles);
+    String generateToken(String username);
 
     /**
      * Extract the username from a token

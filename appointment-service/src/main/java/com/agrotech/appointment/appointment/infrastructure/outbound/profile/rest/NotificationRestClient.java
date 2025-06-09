@@ -26,6 +26,7 @@ public class NotificationRestClient {
         payload.put("message", message);
         payload.put("sendAt", sendAt);
 
-        return restTemplate.postForObject(baseUrl + "/api/v1/notifications", payload, Long.class);
+        Map response = restTemplate.postForObject(baseUrl + "/api/v1/notifications", payload, Map.class);
+        return response != null ? Long.valueOf(response.get("id").toString()) : null;
     }
 }

@@ -8,6 +8,8 @@ import com.agrotech.profile.profile.domain.services.AdvisorCommandService;
 import com.agrotech.profile.profile.domain.services.AdvisorQueryService;
 import com.agrotech.profile.profile.interfaces.rest.resources.*;
 import com.agrotech.profile.profile.interfaces.rest.transform.AdvisorResourceFromEntityAssembler;
+import com.agrotech.profile.profile.interfaces.rest.transform.CreateAdvisorCommandFromResource;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +19,7 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RestController
 @RequestMapping(value="api/v1/advisors", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "Advisors", description = "Advisor Management Endpoints")
@@ -62,4 +64,13 @@ public class AdvisorsController {
         advisorCommandService.handle(deleteAdvisorCommand);
         return ResponseEntity.ok().body("Advisor with id " + id + " deleted successfully");
     }
+
+    @Hidden
+    @PostMapping
+    public ResponseEntity<Long> createAdvisor(@RequestBody CreateAdvisorResource resource) {
+        var command = CreateAdvisorCommandFromResource.toCommandFromResource(resource);
+        var advisorId = advisorCommandService.handle(command);
+        return ResponseEntity.ok(advisorId);
+    }
+
 }

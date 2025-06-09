@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Optional<Profile> findByUserId(Long userId);
-    @Query("SELECT p FROM Profile p WHERE p.occupation IS NOT NULL AND p.occupation <> ''")
+    @Query("SELECT p FROM Profile p WHERE p.userId IN (SELECT a.userId FROM Advisor a)")
     List<Profile> findAllAdvisorProfiles();
 }

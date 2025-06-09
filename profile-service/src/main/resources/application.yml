@@ -2,6 +2,11 @@ server:
   port: 8093
 
 spring:
+  security:
+    user:
+      name: admin
+      password: 12345678
+      roles: ADMIN,USER
   config:
     import: configserver:http://localhost:8888
   application:
@@ -22,9 +27,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
-authorization:
-  jwt:
-    secret: ${JWT_SECRET}
 eureka:
   client:
     service-url:
@@ -36,6 +38,8 @@ eureka:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
+    status-page-url-path: /swagger-ui/index.html
+
 iam:
   api:
     url: http://localhost:8094

@@ -45,10 +45,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         var user = userRepository.findByUsername(command.username());
         if (user.isEmpty()) throw new UserNotFoundException();
         if (!hashingService.matches(command.password(), user.get().getPassword())) throw new InvalidPasswordException();
-        var roles = user.get().getRoles().stream()
-                .map(role -> role.getName())
-                .toList();
-        var token = tokenService.generateToken(user.get().getUsername(), roles);
+        var token = tokenService.generateToken(user.get().getUsername());
         return Optional.of(ImmutablePair.of(user.get(), token));
     }
 
@@ -64,7 +61,6 @@ public class UserCommandServiceImpl implements UserCommandService {
                 .toList();
         user.addRoles(roles);
         userRepository.save(user);
-
         return userRepository.findByUsername(command.username());
     }
 }

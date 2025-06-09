@@ -4,6 +4,7 @@ import com.agrotech.profile.profile.infrastructure.outbound.user.dtos.UserView;
 import com.agrotech.profile.profile.infrastructure.outbound.user.rest.IamRestClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
