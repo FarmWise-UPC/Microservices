@@ -28,7 +28,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-
+authorization:
+  jwt:
+    secret: ${JWT_SECRET}
 eureka:
   client:
     service-url:

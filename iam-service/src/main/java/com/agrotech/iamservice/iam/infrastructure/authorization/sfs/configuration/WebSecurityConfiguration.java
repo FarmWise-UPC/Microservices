@@ -49,12 +49,11 @@ public class WebSecurityConfiguration {
      * This method creates the Bearer Authorization Request Filter.
      * @return The Bearer Authorization Request Filter
      */
-    /*
+
     @Bean
     public BearerAuthorizationRequestFilter authorizationRequestFilter() {
         return new BearerAuthorizationRequestFilter(tokenService, userDetailsService);
     }
-     */
 
     /**
      * This method creates the authentication manager.
@@ -112,7 +111,6 @@ public class WebSecurityConfiguration {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedRequestHandler))
                 .sessionManagement( customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        /*
                         .requestMatchers(
                                 "/api/v1/authentication/**",
                                 "/v3/api-docs/**",
@@ -122,12 +120,9 @@ public class WebSecurityConfiguration {
                                 "/webjars/**",
                                 "/error").permitAll()
                         .anyRequest().authenticated())
-
-                         */
-                        .anyRequest().permitAll())
-                .cors(Customizer.withDefaults());
-        //http.authenticationProvider(authenticationProvider());
-        //http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+                        .cors(Customizer.withDefaults());
+        http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
