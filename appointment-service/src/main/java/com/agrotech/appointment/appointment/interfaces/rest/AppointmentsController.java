@@ -74,9 +74,10 @@ public class AppointmentsController {
     }
 
     @PostMapping
-    public ResponseEntity<AppointmentResource> createAppointment(@RequestBody CreateAppointmentResource createAppointmentResource) {
+    public ResponseEntity<AppointmentResource> createAppointment(@RequestBody CreateAppointmentResource createAppointmentResource,
+                                                                 @RequestHeader("Authorization") String token) {
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.toCommandFromResource(createAppointmentResource);
-        Long appointmentId = appointmentCommandService.handle(createAppointmentCommand);
+        Long appointmentId = appointmentCommandService.handle(createAppointmentCommand, token);
         var appointment = appointmentQueryService.handle(new GetAppointmentByIdQuery(appointmentId));
         if (appointment.isEmpty()) return ResponseEntity.badRequest().build();
         var appointmentResource = AppointmentResourceFromEntityAssembler.toResourceFromEntity(appointment.get());
@@ -93,9 +94,10 @@ public class AppointmentsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAppointment(@PathVariable Long id,
+                                               @RequestHeader("Authorization") String token) {
         var deleteAppointmentCommand = new DeleteAppointmentCommand(id);
-        appointmentCommandService.handle(deleteAppointmentCommand);
+        appointmentCommandService.handle(deleteAppointmentCommand, token);
         return ResponseEntity.ok().body("Appointment with id " + id + " deleted successfully");
     }
 }

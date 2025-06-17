@@ -76,9 +76,10 @@ public class AvailableDatesController {
     }
 
     @PostMapping
-    public ResponseEntity<AvailableDateResource> createAvailableDate(@RequestBody CreateAvailableDateResource createAvailableDateResource) {
+    public ResponseEntity<AvailableDateResource> createAvailableDate(@RequestBody CreateAvailableDateResource createAvailableDateResource,
+                                                                     @RequestHeader("Authorization") String token) {
         var createAvailableDateCommand = CreateAvailableDateCommandFromResourceAssembler.toCommandFromResource(createAvailableDateResource);
-        Long availableDateId = availableDateCommandService.handle(createAvailableDateCommand);
+        Long availableDateId = availableDateCommandService.handle(createAvailableDateCommand, token);
         var availableDate = availableDateQueryService.handle(new GetAvailableDateByIdQuery(availableDateId));
         if(availableDate.isEmpty()) return ResponseEntity.badRequest().build();
         var availableDateResource = AvailableDateResourceFromEntityAssembler.toResourceFromEntity(availableDate.get());

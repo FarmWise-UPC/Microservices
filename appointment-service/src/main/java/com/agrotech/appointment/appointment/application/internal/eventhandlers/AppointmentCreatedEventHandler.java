@@ -1,6 +1,5 @@
 package com.agrotech.appointment.appointment.application.internal.eventhandlers;
 
-import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalNotificationsService;
 import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalProfileService;
 import com.agrotech.appointment.appointment.domain.exceptions.AvailableDateNotFoundException;
 import com.agrotech.appointment.appointment.domain.model.commands.UpdateAvailableDateStatusCommand;
@@ -18,16 +17,13 @@ import java.util.Date;
 @Service
 public class AppointmentCreatedEventHandler {
     private final ExternalProfileService externalProfilesService;
-    private final ExternalNotificationsService externalNotificationsService;
     private final AvailableDateCommandService availableDateCommandService;
     private final AvailableDateQueryService availableDateQueryService;
 
     public AppointmentCreatedEventHandler(ExternalProfileService externalProfileService,
-                                          ExternalNotificationsService externalNotificationsService,
                                           AvailableDateCommandService availableDateCommandService,
                                           AvailableDateQueryService availableDateQueryService) {
         this.externalProfilesService = externalProfileService;
-        this.externalNotificationsService = externalNotificationsService;
         this.availableDateCommandService = availableDateCommandService;
         this.availableDateQueryService = availableDateQueryService;
     }
@@ -42,18 +38,16 @@ public class AppointmentCreatedEventHandler {
 
         availableDateCommandService.handle(new UpdateAvailableDateStatusCommand(event.getAvailableDateId(),"UNAVAILABLE"));
 
-        var farmer = externalProfilesService.fetchFarmerById(event.getFarmerId()).orElseThrow();
-        var advisor = externalProfilesService.fetchAdvisorById(availableDate.getAdvisorId()).orElseThrow();
-        var profileFarmer = externalProfilesService.fetchProfileByUserId(farmer.userId()).orElseThrow();
-        var profileAdvisor = externalProfilesService.fetchProfileByUserId(advisor.userId()).orElseThrow();
+        var farmer = externalProfilesService.fetchFarmerById(event.getFarmerId(), event.getToken()).orElseThrow();
+        var advisor = externalProfilesService.fetchAdvisorById(availableDate.getAdvisorId(), event.getToken()).orElseThrow();
+        var profileFarmer = externalProfilesService.fetchProfileByUserId(farmer.userId(), event.getToken()).orElseThrow();
+        var profileAdvisor = externalProfilesService.fetchProfileByUserId(advisor.userId(), event.getToken()).orElseThrow();
 
-        var meetingUrl = "https://meet.jit.si/agrotechMeeting" + event.getFarmerId() + "-" + availableDate.getAdvisorId();
-
-        externalNotificationsService.createNotification(farmer.userId(), "Proximo Asesoramiento",
+        externalProfilesService.createNotification(farmer.userId(), "Proximo Asesoramiento",
                 "Tienes un asesoramiento programado con " + profileAdvisor.firstName() + " " + profileAdvisor.lastName(),
-                date);
-        externalNotificationsService.createNotification(advisor.userId(), "Proximo Asesoramiento",
+                date, event.getToken());
+        externalProfilesService.createNotification(advisor.userId(), "Proximo Asesoramiento",
                 "Tienes una asesoria programada con " + profileFarmer.firstName() + " " + profileFarmer.lastName(),
-                date);
+                date, event.getToken());
     }
 }

@@ -8,7 +8,7 @@ import com.agrotech.appointment.appointment.domain.model.commands.UpdateAppointm
 import java.util.Optional;
 
 public interface AppointmentCommandService {
-    Long handle(CreateAppointmentCommand command);
+    Long handle(CreateAppointmentCommand command, String token);
     Optional<Appointment> handle(UpdateAppointmentCommand command);
-    void handle(DeleteAppointmentCommand command);
+    void handle(DeleteAppointmentCommand command, String token);
 }

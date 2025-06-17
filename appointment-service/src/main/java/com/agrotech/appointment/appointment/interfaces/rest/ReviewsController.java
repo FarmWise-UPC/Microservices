@@ -78,9 +78,10 @@ public class ReviewsController {
     }
 
     @PostMapping
-    public ResponseEntity<ReviewResource> createReview(@RequestBody CreateReviewResource createReviewResource) {
+    public ResponseEntity<ReviewResource> createReview(@RequestBody CreateReviewResource createReviewResource,
+                                                       @RequestHeader("Authorization") String token) {
         var createReviewCommand = CreateReviewCommandFromResourceAssembler.toCommandFromResource(createReviewResource);
-        Long reviewId = reviewCommandService.handle(createReviewCommand);
+        Long reviewId = reviewCommandService.handle(createReviewCommand, token);
         var review = reviewQueryService.handle(new GetReviewByIdQuery(reviewId));
         if (review.isEmpty()) return ResponseEntity.badRequest().build();
         var reviewResource = ReviewResourceFromEntityAssembler.toResourceFromEntity(review.get());
@@ -88,9 +89,11 @@ public class ReviewsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewResource> updateReview(@PathVariable Long id, @RequestBody UpdateReviewResource updateReviewResource) {
+    public ResponseEntity<ReviewResource> updateReview(@PathVariable Long id,
+                                                       @RequestBody UpdateReviewResource updateReviewResource,
+                                                       @RequestHeader("Authorization") String token) {
         var updateReviewCommand = UpdateReviewCommandFromResourceAssembler.toCommandFromResource(id, updateReviewResource);
-        Optional<Review> review = reviewCommandService.handle(updateReviewCommand);
+        Optional<Review> review = reviewCommandService.handle(updateReviewCommand, token);
         if (review.isEmpty()) return ResponseEntity.notFound().build();
         var reviewResource = ReviewResourceFromEntityAssembler.toResourceFromEntity(review.get());
         return ResponseEntity.ok(reviewResource);

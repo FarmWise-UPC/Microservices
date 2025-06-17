@@ -42,22 +42,23 @@ public class AppointmentCommandServiceImpl implements AppointmentCommandService 
 
     @Override
     @Transactional
-    public Long handle(CreateAppointmentCommand command) {
+    public Long handle(CreateAppointmentCommand command, String token) {
         var availableDate = availableDateQueryService.handle(new GetAvailableDateByIdQuery(command.availableDateId()));
         if (availableDate.isEmpty()) throw new AvailableDateNotFoundException(command.availableDateId());
         if (availableDate.get().getStatus() == AvailableDateStatus.UNAVAILABLE) {
             throw new InvalidAvailableDateException(command.availableDateId());
         }
-        var advisor = externalProfilesService.fetchAdvisorById(availableDate.get().getAdvisorId());
+        var advisor = externalProfilesService.fetchAdvisorById(availableDate.get().getAdvisorId(), token);
         if (advisor.isEmpty()) throw new AdvisorNotFoundException(availableDate.get().getAdvisorId());
-        var farmer = externalProfilesService.fetchFarmerById(command.farmerId());
+        var farmer = externalProfilesService.fetchFarmerById(command.farmerId(), token);
         if (farmer.isEmpty()) throw new FarmerNotFoundException(command.farmerId());
 
         var meetingUrl = "https://meet.jit.si/agrotechMeeting" + command.farmerId() + "-" + availableDate.get().getAdvisorId();
 
         Appointment appointment = new Appointment(command, meetingUrl, command.farmerId(), availableDate.get().getAdvisorId(), availableDate.get());
         appointmentRepository.save(appointment);
-        eventPublisher.publishEvent(new CreateNotificationByAppointmentCreated(this, command.farmerId(), command.availableDateId()));
+        eventPublisher.publishEvent(new CreateNotificationByAppointmentCreated(this,
+                command.farmerId(), command.availableDateId(), token));
         return appointment.getId();
     }
 
@@ -76,12 +77,12 @@ public class AppointmentCommandServiceImpl implements AppointmentCommandService 
 
     @Override
     @Transactional
-    public void handle(DeleteAppointmentCommand command) {
+    public void handle(DeleteAppointmentCommand command, String token) {
         var appointment = appointmentRepository.findById(command.id());
         if (appointment.isEmpty()) throw new AppointmentNotFoundException(command.id());
         var availableDate = availableDateQueryService.handle(new GetAvailableDateByIdQuery(appointment.get().getAvailableDateId()));
         if (availableDate.isEmpty()) throw new AvailableDateNotFoundException(appointment.get().getAvailableDateId());
-        eventPublisher.publishEvent(new CreateNotificationByAppointmentCancelled(this, availableDate.get().getId()));
+        eventPublisher.publishEvent(new CreateNotificationByAppointmentCancelled(this, availableDate.get().getId(), token));
         appointmentRepository.delete(appointment.get());
     }
 

@@ -26,8 +26,8 @@ public class AvailableDateCommandServiceImpl implements AvailableDateCommandServ
     }
 
     @Override
-    public Long handle(CreateAvailableDateCommand command) {
-        var advisor = externalProfilesService.fetchAdvisorById(command.advisorId());
+    public Long handle(CreateAvailableDateCommand command, String token) {
+        var advisor = externalProfilesService.fetchAdvisorById(command.advisorId(), token);
         if(advisor.isEmpty()) throw new AdvisorNotFoundException(command.advisorId());
         var sameAvailableDate = availableDateRepository.findByAdvisorIdAndScheduledDateAndStartTimeAndEndTime(
                 command.advisorId(), command.scheduledDate(), command.startTime(), command.endTime());

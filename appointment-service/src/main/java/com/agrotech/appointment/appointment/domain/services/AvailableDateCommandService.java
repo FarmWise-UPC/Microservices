@@ -9,7 +9,7 @@ import com.agrotech.appointment.appointment.domain.model.entities.AvailableDate;
 import java.util.Optional;
 
 public interface AvailableDateCommandService {
-    Long handle(CreateAvailableDateCommand command);
+    Long handle(CreateAvailableDateCommand command, String token);
     Optional<AvailableDate> handle(UpdateAvailableDateCommand command);
     void handle(DeleteAvailableDateCommand command);
     void handle(UpdateAvailableDateStatusCommand command);

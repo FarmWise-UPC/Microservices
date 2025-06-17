@@ -1,6 +1,5 @@
 package com.agrotech.appointment.appointment.application.internal.eventhandlers;
 
-import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalNotificationsService;
 import com.agrotech.appointment.appointment.application.internal.outboundservices.profile.ExternalProfileService;
 import com.agrotech.appointment.appointment.domain.exceptions.AvailableDateNotFoundException;
 import com.agrotech.appointment.appointment.domain.model.commands.UpdateAvailableDateStatusCommand;
@@ -17,16 +16,14 @@ import java.util.Date;
 
 @Service
 public class AppointmentDeletedEventHandler {
-    private final ExternalNotificationsService externalNotificationsService;
     private final ExternalProfileService externalProfilesService;
     private final AvailableDateCommandService availableDateCommandService;
     private final AvailableDateQueryService availableDateQueryService;
 
-    public AppointmentDeletedEventHandler(ExternalNotificationsService externalNotificationsService,
+    public AppointmentDeletedEventHandler(
                                           ExternalProfileService externalProfilesService,
                                           AvailableDateCommandService availableDateCommandService,
                                           AvailableDateQueryService availableDateQueryService) {
-        this.externalNotificationsService = externalNotificationsService;
         this.externalProfilesService = externalProfilesService;
         this.availableDateCommandService = availableDateCommandService;
         this.availableDateQueryService = availableDateQueryService;
@@ -40,12 +37,12 @@ public class AppointmentDeletedEventHandler {
 
         availableDateCommandService.handle(new UpdateAvailableDateStatusCommand(event.getAvailableDateId(), "AVAILABLE"));
 
-        var advisor = externalProfilesService.fetchAdvisorById(availableDate.getAdvisorId()).orElseThrow(
+        var advisor = externalProfilesService.fetchAdvisorById(availableDate.getAdvisorId(), event.getToken()).orElseThrow(
                 () -> new AdvisorNotFoundException(availableDate.getAdvisorId())
         );
 
-        externalNotificationsService.createNotification(advisor.userId(), "Cita Cancelada",
+        externalProfilesService.createNotification(advisor.userId(), "Cita Cancelada",
                 "Se ha cancelado una cita programada con un agricultor para el dia " + availableDate.getScheduledDate() + " a las " + availableDate.getStartTime(),
-                new Date());
+                new Date(), event.getToken());
     }
 }

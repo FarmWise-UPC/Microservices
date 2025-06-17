@@ -8,7 +8,7 @@ import com.agrotech.appointment.appointment.domain.model.entities.Review;
 import java.util.Optional;
 
 public interface ReviewCommandService {
-    Long handle(CreateReviewCommand command);
-    Optional<Review> handle(UpdateReviewCommand command);
+    Long handle(CreateReviewCommand command, String token);
+    Optional<Review> handle(UpdateReviewCommand command, String token);
     void handle(DeleteReviewCommand command);
 }
