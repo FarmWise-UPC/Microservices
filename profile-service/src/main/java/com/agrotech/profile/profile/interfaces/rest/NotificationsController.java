@@ -10,6 +10,7 @@ import com.agrotech.profile.profile.interfaces.rest.resources.CreateNotification
 import com.agrotech.profile.profile.interfaces.rest.resources.NotificationResource;
 import com.agrotech.profile.profile.interfaces.rest.transform.CreateNotificationCommandFromResourceAssembler;
 import com.agrotech.profile.profile.interfaces.rest.transform.NotificationResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class NotificationsController {
 
     @PostMapping
     public ResponseEntity<NotificationResource> createNotification(@RequestBody CreateNotificationResource createNotificationResource,
-                                                                   @RequestHeader("Authorization") String token){
+                                                                   @Parameter(hidden = true) @RequestHeader("Authorization") String token){
         var createNotificationCommand = CreateNotificationCommandFromResourceAssembler.toCommandFromResource(createNotificationResource);
         Long notificationId = notificationCommandService.handle(createNotificationCommand, token);
         var notification = notificationQueryService.handle(new GetNotificationByIdQuery(notificationId));

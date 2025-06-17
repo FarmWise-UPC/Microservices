@@ -14,6 +14,7 @@ import com.agrotech.profile.profile.interfaces.rest.resources.UpdateProfileResou
 import com.agrotech.profile.profile.interfaces.rest.transform.CreateProfileCommandFromResourceAssembler;
 import com.agrotech.profile.profile.interfaces.rest.transform.ProfileResourceFromEntityAssembler;
 import com.agrotech.profile.profile.interfaces.rest.transform.UpdateProfileCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +75,7 @@ public class ProfilesController {
 
     @PostMapping
     public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource createProfileResource,
-                                                         @RequestHeader("Authorization") String token) {
+                                                         @Parameter(hidden = true)  @RequestHeader("Authorization") String token) {
         var createProfileCommand = CreateProfileCommandFromResourceAssembler.toCommandFromResource(createProfileResource);
         Long profileId = profileCommandService.handle(createProfileCommand, token);
         var profile = profileQueryService.handle(new GetProfileByIdQuery(profileId));

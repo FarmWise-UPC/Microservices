@@ -14,6 +14,7 @@ import com.agrotech.management.management.interfaces.rest.resources.UpdateEnclos
 import com.agrotech.management.management.interfaces.rest.transform.CreateEnclosureCommandFromResourceAssembler;
 import com.agrotech.management.management.interfaces.rest.transform.EnclosureResourceFromEntityAssembler;
 import com.agrotech.management.management.interfaces.rest.transform.UpdateEnclosureCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +66,7 @@ public class EnclosuresController {
 
     @PostMapping
     public ResponseEntity<EnclosureResource> createEnclosure(@RequestBody CreateEnclosureResource createEnclosureResource,
-                                                             @RequestHeader("Authorization") String token) {
+                                                             @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var createEnclosureCommand = CreateEnclosureCommandFromResourceAssembler.toCommandFromResource(createEnclosureResource);
         Long enclosureId = enclosureCommandService.handle(createEnclosureCommand, token);
         var enclosure = enclosureQueryService.handle(new GetEnclosureByIdQuery(enclosureId));

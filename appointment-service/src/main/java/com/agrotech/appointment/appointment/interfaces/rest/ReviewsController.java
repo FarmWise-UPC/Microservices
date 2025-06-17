@@ -11,6 +11,7 @@ import com.agrotech.appointment.appointment.interfaces.rest.resources.UpdateRevi
 import com.agrotech.appointment.appointment.interfaces.rest.transform.CreateReviewCommandFromResourceAssembler;
 import com.agrotech.appointment.appointment.interfaces.rest.transform.ReviewResourceFromEntityAssembler;
 import com.agrotech.appointment.appointment.interfaces.rest.transform.UpdateReviewCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,7 @@ public class ReviewsController {
 
     @PostMapping
     public ResponseEntity<ReviewResource> createReview(@RequestBody CreateReviewResource createReviewResource,
-                                                       @RequestHeader("Authorization") String token) {
+                                                       @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var createReviewCommand = CreateReviewCommandFromResourceAssembler.toCommandFromResource(createReviewResource);
         Long reviewId = reviewCommandService.handle(createReviewCommand, token);
         var review = reviewQueryService.handle(new GetReviewByIdQuery(reviewId));
@@ -91,7 +92,7 @@ public class ReviewsController {
     @PutMapping("/{id}")
     public ResponseEntity<ReviewResource> updateReview(@PathVariable Long id,
                                                        @RequestBody UpdateReviewResource updateReviewResource,
-                                                       @RequestHeader("Authorization") String token) {
+                                                       @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var updateReviewCommand = UpdateReviewCommandFromResourceAssembler.toCommandFromResource(id, updateReviewResource);
         Optional<Review> review = reviewCommandService.handle(updateReviewCommand, token);
         if (review.isEmpty()) return ResponseEntity.notFound().build();

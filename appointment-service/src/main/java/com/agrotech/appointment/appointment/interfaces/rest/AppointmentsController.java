@@ -12,6 +12,7 @@ import com.agrotech.appointment.appointment.interfaces.rest.resources.UpdateAppo
 import com.agrotech.appointment.appointment.interfaces.rest.transform.AppointmentResourceFromEntityAssembler;
 import com.agrotech.appointment.appointment.interfaces.rest.transform.CreateAppointmentCommandFromResourceAssembler;
 import com.agrotech.appointment.appointment.interfaces.rest.transform.UpdateAppointmentCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class AppointmentsController {
 
     @PostMapping
     public ResponseEntity<AppointmentResource> createAppointment(@RequestBody CreateAppointmentResource createAppointmentResource,
-                                                                 @RequestHeader("Authorization") String token) {
+                                                                 @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.toCommandFromResource(createAppointmentResource);
         Long appointmentId = appointmentCommandService.handle(createAppointmentCommand, token);
         var appointment = appointmentQueryService.handle(new GetAppointmentByIdQuery(appointmentId));
@@ -95,7 +96,7 @@ public class AppointmentsController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAppointment(@PathVariable Long id,
-                                               @RequestHeader("Authorization") String token) {
+                                               @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var deleteAppointmentCommand = new DeleteAppointmentCommand(id);
         appointmentCommandService.handle(deleteAppointmentCommand, token);
         return ResponseEntity.ok().body("Appointment with id " + id + " deleted successfully");

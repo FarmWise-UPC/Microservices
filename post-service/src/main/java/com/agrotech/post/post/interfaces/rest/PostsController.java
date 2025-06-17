@@ -14,6 +14,7 @@ import com.agrotech.post.post.interfaces.rest.resources.UpdatePostResource;
 import com.agrotech.post.post.interfaces.rest.transform.CreatePostCommandFromResourceAssembler;
 import com.agrotech.post.post.interfaces.rest.transform.PostResourceFromEntityAssembler;
 import com.agrotech.post.post.interfaces.rest.transform.UpdatePostCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,7 @@ public class PostsController {
 
     @PostMapping
     public ResponseEntity<PostResource> createPost(@RequestBody CreatePostResource createPostResource,
-                                                   @RequestHeader("Authorization") String token) {
+                                                   @Parameter(hidden = true)  @RequestHeader("Authorization") String token) {
         var createPostCommand = CreatePostCommandFromResourceAssembler.toCommandFromResource(createPostResource);
         var postId = postCommandService.handle(createPostCommand, token);
         var getPostByIdQuery = new GetPostByIdQuery(postId);
@@ -83,7 +84,7 @@ public class PostsController {
     @PutMapping("/{id}")
     public ResponseEntity<PostResource> updatePost(@PathVariable Long id,
                                                    @RequestBody UpdatePostResource updatePostResource,
-                                                   @RequestHeader("Authorization") String token) {
+                                                   @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var updatePostCommand = UpdatePostCommandFromResourceAssembler.toCommandFromResource(id, updatePostResource);
         Optional<Post> post = postCommandService.handle(updatePostCommand, token);
         if (post.isEmpty()) return ResponseEntity.badRequest().build();

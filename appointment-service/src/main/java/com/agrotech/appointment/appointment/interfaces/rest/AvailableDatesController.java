@@ -11,6 +11,7 @@ import com.agrotech.appointment.appointment.interfaces.rest.resources.UpdateAvai
 import com.agrotech.appointment.appointment.interfaces.rest.transform.AvailableDateResourceFromEntityAssembler;
 import com.agrotech.appointment.appointment.interfaces.rest.transform.CreateAvailableDateCommandFromResourceAssembler;
 import com.agrotech.appointment.appointment.interfaces.rest.transform.UpdateAvailableDateCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,7 +78,7 @@ public class AvailableDatesController {
 
     @PostMapping
     public ResponseEntity<AvailableDateResource> createAvailableDate(@RequestBody CreateAvailableDateResource createAvailableDateResource,
-                                                                     @RequestHeader("Authorization") String token) {
+                                                                     @Parameter(hidden = true) @RequestHeader("Authorization") String token) {
         var createAvailableDateCommand = CreateAvailableDateCommandFromResourceAssembler.toCommandFromResource(createAvailableDateResource);
         Long availableDateId = availableDateCommandService.handle(createAvailableDateCommand, token);
         var availableDate = availableDateQueryService.handle(new GetAvailableDateByIdQuery(availableDateId));
