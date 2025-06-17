@@ -1,5 +1,6 @@
 package com.agrotech.profile.profile.application.internal.commandservices;
 
+import com.agrotech.profile.profile.domain.exceptions.UserAlreadyUsedException;
 import com.agrotech.profile.profile.domain.model.commands.CreateFarmerCommand;
 import com.agrotech.profile.profile.domain.model.commands.DeleteFarmerCommand;
 import com.agrotech.profile.profile.domain.model.entities.Farmer;
@@ -21,7 +22,7 @@ public class FarmerCommandServiceImpl implements FarmerCommandService {
     public Long handle(CreateFarmerCommand command) {
         var sameUser = farmerRepository.findByUserId(command.userId());
         if (sameUser.isPresent()) {
-            throw new UserNotFoundException(command.userId());
+            throw new UserAlreadyUsedException(command.userId());
         }
         var farmer = new Farmer(command);
         farmerRepository.save(farmer);

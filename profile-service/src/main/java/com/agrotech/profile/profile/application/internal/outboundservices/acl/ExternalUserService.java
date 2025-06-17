@@ -15,7 +15,7 @@ public class ExternalUserService {
         this.iamRestClient = iamRestClient;
     }
 
-    public Optional<UserView> fetchUserById(Long userId) {
-        return iamRestClient.getUserById(userId);
+    public Optional<UserView> fetchUserById(Long userId, String token) {
+        return iamRestClient.getUserById(userId, token);
     }
 }

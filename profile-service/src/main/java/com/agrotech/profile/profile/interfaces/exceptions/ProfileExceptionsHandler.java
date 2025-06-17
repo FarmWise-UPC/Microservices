@@ -3,6 +3,7 @@ package com.agrotech.profile.profile.interfaces.exceptions;
 import com.agrotech.profile.profile.domain.exceptions.NotificationNotFoundException;
 import com.agrotech.profile.profile.domain.exceptions.ProfileNotFoundException;
 import com.agrotech.profile.profile.domain.exceptions.UserAlreadyUsedException;
+import com.agrotech.profile.shared.domain.exceptions.UserNotFoundException;
 import com.agrotech.profile.shared.infrastructure.interfaces.responses.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,12 @@ class ProfileExceptionsHandler{
     @ExceptionHandler(NotificationNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleNotificationNotFoundException(NotificationNotFoundException e) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO("Notification Not Found", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUserNotFoundException(UserNotFoundException e) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO("User Not Found", e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 

@@ -21,8 +21,8 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     }
 
     @Override
-    public Long handle(CreateNotificationCommand command) {
-        var user = externalUserService.fetchUserById(command.userId());
+    public Long handle(CreateNotificationCommand command, String token) {
+        var user = externalUserService.fetchUserById(command.userId(), token);
         if (user.isEmpty()) {
             throw new UserNotFoundException(command.userId());
         }
@@ -38,6 +38,5 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
             throw new NotificationNotFoundException(command.id());
         }
         notificationRepository.delete(notification.get());
-
     }
 }

@@ -59,9 +59,10 @@ public class NotificationsController {
     }
 
     @PostMapping
-    public ResponseEntity<NotificationResource> createNotification(@RequestBody CreateNotificationResource createNotificationResource){
+    public ResponseEntity<NotificationResource> createNotification(@RequestBody CreateNotificationResource createNotificationResource,
+                                                                   @RequestHeader("Authorization") String token){
         var createNotificationCommand = CreateNotificationCommandFromResourceAssembler.toCommandFromResource(createNotificationResource);
-        Long notificationId = notificationCommandService.handle(createNotificationCommand);
+        Long notificationId = notificationCommandService.handle(createNotificationCommand, token);
         var notification = notificationQueryService.handle(new GetNotificationByIdQuery(notificationId));
         if (notification.isEmpty()) return ResponseEntity.badRequest().build();
         var notificationResource = NotificationResourceFromEntityAssembler.toResourceFromEntity(notification.get());

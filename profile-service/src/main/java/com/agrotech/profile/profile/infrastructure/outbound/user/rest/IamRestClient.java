@@ -2,6 +2,10 @@ package com.agrotech.profile.profile.infrastructure.outbound.user.rest;
 
 import com.agrotech.profile.profile.infrastructure.outbound.user.dtos.UserView;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
@@ -21,10 +25,21 @@ public class IamRestClient {
         this.baseUrl = baseUrl;
     }
 
-    public Optional<UserView> getUserById(Long userId) {
+    public Optional<UserView> getUserById(Long userId, String token) {
+        String cleanedToken = token.replace("Bearer ", "");
         try {
-            var user = restTemplate.getForObject(baseUrl + "/api/v1/users/" + userId, UserView.class);
-            return Optional.ofNullable(user);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(cleanedToken);
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+            ResponseEntity<UserView> response = restTemplate.exchange(
+                    baseUrl + "/api/v1/users/" + userId,
+                    HttpMethod.GET,
+                    entity,
+                    UserView.class
+            );
+            System.out.println("Response: " + response.getStatusCode());
+            System.out.println("Response Body: " + response.getBody());
+            return Optional.ofNullable(response.getBody());
         } catch (Exception e) {
             return Optional.empty();
         }

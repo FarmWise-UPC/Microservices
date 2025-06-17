@@ -8,7 +8,7 @@ import com.agrotech.profile.profile.domain.model.commands.UpdateProfileCommand;
 import java.util.Optional;
 
 public interface ProfileCommandService {
-    Long handle(CreateProfileCommand command);
+    Long handle(CreateProfileCommand command, String token);
     Optional<Profile> handle(UpdateProfileCommand command);
     void handle(DeleteProfileCommand command);
 }

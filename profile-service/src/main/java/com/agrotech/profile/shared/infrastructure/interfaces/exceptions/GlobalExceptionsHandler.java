@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -14,9 +15,14 @@ public class GlobalExceptionsHandler {
     // Maneja excepciones generales
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGlobalException(Exception e) {
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Internal Server Error", "Ocurrió un error inesperado.");
+        // Puedes incluir más información según tu necesidad
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                e.getMessage(),                  // Mensaje de excepción
+                e.getClass().getSimpleName() // Tipo de excepción
+        );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     // Jakarta Validations
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException e) {

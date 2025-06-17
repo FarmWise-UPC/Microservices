@@ -4,6 +4,6 @@ import com.agrotech.profile.profile.domain.model.commands.CreateNotificationComm
 import com.agrotech.profile.profile.domain.model.commands.DeleteNotificationCommand;
 
 public interface NotificationCommandService {
-    Long handle(CreateNotificationCommand command);
+    Long handle(CreateNotificationCommand command, String token);
     void handle(DeleteNotificationCommand command);
 }

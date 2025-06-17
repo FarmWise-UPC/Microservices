@@ -73,9 +73,10 @@ public class ProfilesController {
     }
 
     @PostMapping
-    public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource createProfileResource) {
+    public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource createProfileResource,
+                                                         @RequestHeader("Authorization") String token) {
         var createProfileCommand = CreateProfileCommandFromResourceAssembler.toCommandFromResource(createProfileResource);
-        Long profileId = profileCommandService.handle(createProfileCommand);
+        Long profileId = profileCommandService.handle(createProfileCommand, token);
         var profile = profileQueryService.handle(new GetProfileByIdQuery(profileId));
         if (profile.isEmpty()) return ResponseEntity.badRequest().build();
         var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());

@@ -30,8 +30,9 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     }
 
     @Override
-    public Long handle(CreateProfileCommand command) {
-        var userOpt = externalUserService.fetchUserById(command.userId());
+    public Long handle(CreateProfileCommand command, String token) {
+        var userOpt = externalUserService.fetchUserById(command.userId(), token);
+
         if (userOpt.isEmpty()) {
             throw new UserNotFoundException(command.userId());
         }
