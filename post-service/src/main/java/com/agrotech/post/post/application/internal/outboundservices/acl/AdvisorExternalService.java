@@ -14,7 +14,7 @@ public class AdvisorExternalService {
         this.advisorRestClient = advisorRestClient;
     }
 
-    public Optional<AdvisorView> fetchAdvisorById(Long advisorId) {
-        return advisorRestClient.getAdvisorById(advisorId);
+    public Optional<AdvisorView> fetchAdvisorById(Long advisorId, String token) {
+        return advisorRestClient.getAdvisorById(advisorId, token);
     }
 }

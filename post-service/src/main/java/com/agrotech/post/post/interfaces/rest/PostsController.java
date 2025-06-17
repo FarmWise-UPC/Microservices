@@ -69,9 +69,10 @@ public class PostsController {
     }
 
     @PostMapping
-    public ResponseEntity<PostResource> createPost(@RequestBody CreatePostResource createPostResource) {
+    public ResponseEntity<PostResource> createPost(@RequestBody CreatePostResource createPostResource,
+                                                   @RequestHeader("Authorization") String token) {
         var createPostCommand = CreatePostCommandFromResourceAssembler.toCommandFromResource(createPostResource);
-        var postId = postCommandService.handle(createPostCommand);
+        var postId = postCommandService.handle(createPostCommand, token);
         var getPostByIdQuery = new GetPostByIdQuery(postId);
         var post = postQueryService.handle(getPostByIdQuery);
         if (post.isEmpty()) return ResponseEntity.badRequest().build();
@@ -80,9 +81,11 @@ public class PostsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResource> updatePost(@PathVariable Long id, @RequestBody UpdatePostResource updatePostResource) {
+    public ResponseEntity<PostResource> updatePost(@PathVariable Long id,
+                                                   @RequestBody UpdatePostResource updatePostResource,
+                                                   @RequestHeader("Authorization") String token) {
         var updatePostCommand = UpdatePostCommandFromResourceAssembler.toCommandFromResource(id, updatePostResource);
-        Optional<Post> post = postCommandService.handle(updatePostCommand);
+        Optional<Post> post = postCommandService.handle(updatePostCommand, token);
         if (post.isEmpty()) return ResponseEntity.badRequest().build();
         var postResource = PostResourceFromEntityAssembler.toResourceFromEntity(post.get());
         return ResponseEntity.ok(postResource);

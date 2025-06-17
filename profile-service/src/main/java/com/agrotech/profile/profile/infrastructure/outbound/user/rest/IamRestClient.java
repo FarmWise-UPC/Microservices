@@ -37,8 +37,6 @@ public class IamRestClient {
                     entity,
                     UserView.class
             );
-            System.out.println("Response: " + response.getStatusCode());
-            System.out.println("Response Body: " + response.getBody());
             return Optional.ofNullable(response.getBody());
         } catch (Exception e) {
             return Optional.empty();

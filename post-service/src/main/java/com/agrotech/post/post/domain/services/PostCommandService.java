@@ -10,7 +10,7 @@ import com.agrotech.post.post.domain.model.commands.UpdatePostCommand;
 import java.util.Optional;
 
 public interface PostCommandService {
-    Long handle(CreatePostCommand command);
-    Optional<Post> handle(UpdatePostCommand command);
+    Long handle(CreatePostCommand command, String token);
+    Optional<Post> handle(UpdatePostCommand command, String token);
     void handle(DeletePostCommand command);
 }

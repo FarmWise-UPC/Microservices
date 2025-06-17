@@ -24,27 +24,19 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public Long handle(CreatePostCommand command) {
-        System.out.println("Iniciando creación de Post con advisorId=" + command.advisorId());
-        System.out.println("Consultando existencia del advisor en el servicio externo...");
-
-        var advisor = advisorExternalService.fetchAdvisorById(command.advisorId());
-
-        System.out.println("Resultado de la consulta de advisor: " + advisor);
-
+    public Long handle(CreatePostCommand command, String token) {
+        var advisor = advisorExternalService.fetchAdvisorById(command.advisorId(), token);
         if (advisor.isEmpty()) {
-            System.out.println("Advisor con id=" + command.advisorId() + " no encontrado");
             throw new AdvisorNotFoundException(command.advisorId());
         }
         Post post = new Post(command);
         postRepository.save(post);
-        System.out.println("Post creado exitosamente con id=" + post.getId());
         return post.getId();
     }
 
     @Override
-    public Optional<Post> handle(UpdatePostCommand command) {
-        var advisor = advisorExternalService.fetchAdvisorById(command.advisorId());
+    public Optional<Post> handle(UpdatePostCommand command, String token) {
+        var advisor = advisorExternalService.fetchAdvisorById(command.advisorId(), token);
         if (advisor.isEmpty()) {
             throw new AdvisorNotFoundException(command.advisorId());
         }
