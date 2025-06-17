@@ -1,6 +1,5 @@
 package com.agrotech.profile.profile.domain.model.entities;
 
-import com.agrotech.iamservice.iam.domain.model.aggregates.User;
 import com.agrotech.profile.profile.domain.model.commands.CreateNotificationCommand;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

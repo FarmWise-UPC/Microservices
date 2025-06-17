@@ -1,6 +1,5 @@
 package com.agrotech.profile.profile.domain.model.entities;
 
-import com.agrotech.iamservice.iam.domain.model.aggregates.User;
 import com.agrotech.profile.profile.domain.model.commands.CreateAdvisorCommand;
 import com.agrotech.profile.profile.domain.model.commands.UpdateAdvisorCommand;
 import jakarta.persistence.*;

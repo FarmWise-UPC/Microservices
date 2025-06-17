@@ -1,6 +1,7 @@
 package com.agrotech.management.management.application.internal.commandservices;
 
 import com.agrotech.management.management.domain.exceptions.EnclosureNotFoundException;
+import com.agrotech.management.management.domain.exceptions.FarmerNotFoundException;
 import com.agrotech.management.management.domain.model.aggregates.Enclosure;
 import com.agrotech.management.management.domain.model.commands.CreateEnclosureCommand;
 import com.agrotech.management.management.domain.model.commands.DeleteEnclosureCommand;
@@ -8,7 +9,6 @@ import com.agrotech.management.management.domain.model.commands.UpdateEnclosureC
 import com.agrotech.management.management.domain.services.EnclosureCommandService;
 import com.agrotech.management.management.infrastructure.outbound.profile.rest.ProfileRestClient;
 import com.agrotech.management.management.infrastructure.persitence.jpa.repositories.EnclosureRepository;
-import com.agrotech.profile.shared.domain.exceptions.FarmerNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -43,9 +43,6 @@ public class EnclosureCommandServiceImpl implements EnclosureCommandService {
         if (enclosureOpt.isEmpty()) {
             throw new EnclosureNotFoundException(command.enclosureId());
         }
-
-        // Opcional: validar si el farmerId cambia y validar existencia (si actualizas farmerId en UpdateCommand)
-        // Aquí asumo que farmerId no se actualiza en UpdateEnclosureCommand; si sí, agrega validación similar.
 
         var enclosureToUpdate = enclosureOpt.get();
         Enclosure updatedEnclosure = enclosureRepository.save(enclosureToUpdate.update(command));

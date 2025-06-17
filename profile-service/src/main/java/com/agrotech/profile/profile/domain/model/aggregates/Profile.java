@@ -1,14 +1,10 @@
 package com.agrotech.profile.profile.domain.model.aggregates;
 
-import com.agrotech.iamservice.iam.domain.model.aggregates.User;
 import com.agrotech.profile.profile.domain.model.commands.CreateProfileCommand;
 import com.agrotech.profile.profile.domain.model.commands.UpdateProfileCommand;
 import com.agrotech.profile.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -2,6 +2,7 @@ package com.agrotech.management.management.interfaces.exceptions;
 
 import com.agrotech.management.management.domain.exceptions.AnimalNotFoundException;
 import com.agrotech.management.management.domain.exceptions.EnclosureNotFoundException;
+import com.agrotech.management.management.domain.exceptions.FarmerNotFoundException;
 import com.agrotech.management.management.domain.exceptions.IncorrectHealthStatusException;
 import com.agrotech.management.shared.infrastructure.interfaces.responses.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ManagementExceptionsHandler {
+    @ExceptionHandler(FarmerNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleFarmerNotFoundException(FarmerNotFoundException e) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO("Farmer Not Found", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(AnimalNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleAnimalNotFoundException(AnimalNotFoundException e) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO("Animal Not Found", e.getMessage());
