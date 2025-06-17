@@ -25,9 +25,8 @@ public class EnclosureCommandServiceImpl implements EnclosureCommandService {
     }
 
     @Override
-    public Long handle(CreateEnclosureCommand command) {
-        // Validar que el farmer exista en el microservicio PROFILE
-        var farmerOpt = profileRestClient.getFarmerById(command.farmerId());
+    public Long handle(CreateEnclosureCommand command, String token) {
+        var farmerOpt = profileRestClient.getFarmerById(command.farmerId(), token);
         if (farmerOpt.isEmpty()) {
             throw new FarmerNotFoundException(command.farmerId());
         }

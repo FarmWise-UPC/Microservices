@@ -64,9 +64,10 @@ public class EnclosuresController {
     }
 
     @PostMapping
-    public ResponseEntity<EnclosureResource> createEnclosure(@RequestBody CreateEnclosureResource createEnclosureResource) {
+    public ResponseEntity<EnclosureResource> createEnclosure(@RequestBody CreateEnclosureResource createEnclosureResource,
+                                                             @RequestHeader("Authorization") String token) {
         var createEnclosureCommand = CreateEnclosureCommandFromResourceAssembler.toCommandFromResource(createEnclosureResource);
-        Long enclosureId = enclosureCommandService.handle(createEnclosureCommand);
+        Long enclosureId = enclosureCommandService.handle(createEnclosureCommand, token);
         var enclosure = enclosureQueryService.handle(new GetEnclosureByIdQuery(enclosureId));
         if (enclosure.isEmpty()) return ResponseEntity.badRequest().build();
         var enclosureResource = EnclosureResourceFromEntityAssembler.toResourceFromEntity(enclosure.get());

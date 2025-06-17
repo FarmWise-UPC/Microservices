@@ -10,7 +10,7 @@ import com.agrotech.management.management.domain.model.commands.UpdateEnclosureC
 import java.util.Optional;
 
 public interface EnclosureCommandService {
-    Long handle(CreateEnclosureCommand command);
+    Long handle(CreateEnclosureCommand command, String token);
     Optional<Enclosure> handle(UpdateEnclosureCommand command);
     void handle(DeleteEnclosureCommand command);
 }
