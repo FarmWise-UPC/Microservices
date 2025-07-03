@@ -2,13 +2,6 @@ server:
   port: 8092
 
 spring:
-  jmx:
-    enabled: false
-  security:
-    user:
-      name: admin
-      password: 12345678
-      roles: ADMIN,USER
   config:
     import: configserver:http://localhost:8888
   application:

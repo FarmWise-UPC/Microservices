@@ -2,11 +2,6 @@ server:
   port: 8090
 
 spring:
-  security:
-    user:
-      name: admin
-      password: 12345678
-      roles: ADMIN,USER
   config:
     import: configserver:http://localhost:8888
   application:

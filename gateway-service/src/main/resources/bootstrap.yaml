@@ -2,20 +2,25 @@ spring:
   application:
     name: gateway-service
   cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
     config:
-      gateway:
-        discovery:
-          locator:
-            enabled: true
-            lowerCaseServiceId: true
-      uri: http://config-server:8888
-      #fail-fast: true
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: http://eureka-server:8761/eureka/
-#      initialInstanceInfoReplicationIntervalSeconds: 5
-#      registryFetchIntervalSeconds: 5
-#      instance:
-#      leaseRenewalIntervalInSeconds: 5
-#      leaseExpirationDurationInSeconds: 5
+      uri: http://localhost:8888
+      fail-fast: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: gateway-service
+    description: API Gateway para enrutar solicitudes a los microservicios de AgroTech
+    version: 1.0.0
