@@ -44,7 +44,7 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder(@Value("${authorization.jwt.secret}") String secret) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
         return NimbusJwtDecoder.withSecretKey(key)
-                .macAlgorithm(MacAlgorithm.HS512)
+                .macAlgorithm(MacAlgorithm.HS256)
                 .build();
     }
 }
