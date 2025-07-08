@@ -8,7 +8,7 @@ spring:
           enabled: true
           lower-case-service-id: true
     config:
-      uri: http://localhost:8888
+      uri: http://config-service:8888
       fail-fast: true
 
 management:

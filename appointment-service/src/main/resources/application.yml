@@ -1,14 +1,20 @@
 server:
   port: 8090
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
 spring:
   config:
-    import: configserver:http://localhost:8888
+    import: configserver:http://config-service:8888
   application:
     name: appointment-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/appointmentdb?allowPublicKeyRetrieval=true&useSSL=false # el db es unico por microservicio
+    url: jdbc:mysql://appointment-db:3306/appointmentdb?allowPublicKeyRetrieval=true&useSSL=false # el db es unico por microservicio
     username: root
     password: 12345678
   jpa:
@@ -27,7 +33,7 @@ authorization:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
   instance:
@@ -38,4 +44,4 @@ eureka:
     status-page-url-path: /swagger-ui/index.html
 profiles:
   api:
-    url: http://localhost:8093  # El puerto 8093 es el puerto del microservicio de perfil
+    url: http://profile-service:8093  # El puerto 8093 es el puerto del microservicio de perfil
