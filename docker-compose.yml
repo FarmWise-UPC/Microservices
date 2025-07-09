@@ -16,7 +16,6 @@ services:
   eureka-service:
     build:
       context: .
-      
       dockerfile: eureka-service/Dockerfile
     ports:
       - "8761:8761"
@@ -56,6 +55,22 @@ services:
       - MYSQL_DATABASE=iamdb
     volumes:
       - iam-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  profile-db:
+    image: mysql:8
+    container_name: profile-db
+    ports:
+      - "33065:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=profiledb
+    volumes:
+      - profile-db-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
       interval: 10s
@@ -110,28 +125,12 @@ services:
       timeout: 5s
       retries: 5
 
-  profile-db:
-    image: mysql:8
-    container_name: profile-db
-    ports:
-      - "33065:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=12345678
-      - MYSQL_DATABASE=profiledb
-    volumes:
-      - profile-db-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   iam-service:
     build:
       context: .
       dockerfile: iam-service/Dockerfile
     ports:
-      - "8094:8094"
+      - "8081:8081"
     depends_on:
       config-service:
         condition: service_healthy
@@ -140,7 +139,28 @@ services:
       iam-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8094/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+  iam-service-2:
+    build:
+      context: .
+      dockerfile: iam-service/Dockerfile
+    ports:
+      - "8091:8081"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      iam-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -153,7 +173,7 @@ services:
       context: .
       dockerfile: profile-service/Dockerfile
     ports:
-      - "8093:8093"
+      - "8082:8082"
     depends_on:
       config-service:
         condition: service_healthy
@@ -164,7 +184,31 @@ services:
       profile-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8093/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      
+  profile-service-2:
+    build:
+      context: .
+      dockerfile: profile-service/Dockerfile
+    ports:
+      - "8092:8082"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      iam-service:
+        condition: service_healthy
+      profile-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8092/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -177,7 +221,7 @@ services:
       context: .
       dockerfile: appointment-service/Dockerfile
     ports:
-      - "8090:8090"
+      - "8083:8083"
     depends_on:
       config-service:
         condition: service_healthy
@@ -188,7 +232,31 @@ services:
       appointment-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+
+  appointment-service-2:
+    build:
+      context: .
+      dockerfile: appointment-service/Dockerfile
+    ports:
+      - "8093:8083"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+      appointment-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8093/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -201,7 +269,7 @@ services:
       context: .
       dockerfile: management-service/Dockerfile
     ports:
-      - "8081:8081"
+      - "8084:8084"
     depends_on:
       config-service:
         condition: service_healthy
@@ -212,7 +280,31 @@ services:
       management-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+
+  management-service-2:
+    build:
+      context: .
+      dockerfile: management-service/Dockerfile
+    ports:
+      - "8094:8084"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+      management-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8094/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -225,7 +317,7 @@ services:
       context: .
       dockerfile: post-service/Dockerfile
     ports:
-      - "8092:8092"
+      - "8085:8085"
     depends_on:
       config-service:
         condition: service_healthy
@@ -236,7 +328,31 @@ services:
       post-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8092/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+
+  post-service-2:
+    build:
+      context: .
+      dockerfile: post-service/Dockerfile
+    ports:
+      - "8095:8085"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+      post-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8095/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -246,7 +362,7 @@ services:
 
 volumes:
   iam-db-data:
+  profile-db-data:
   appointment-db-data:
   management-db-data:
   post-db-data:
-  profile-db-data:
