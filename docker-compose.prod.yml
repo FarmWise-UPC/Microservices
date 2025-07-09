@@ -1,0 +1,243 @@
+services:
+  config-service:
+    image: pierod0411/config-service
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  eureka-service:
+    image: pierod0411/eureka-service
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway-service:
+    image: pierod0411/gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  iam-service:
+    image: pierod0411/iam-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  iam-service-2:
+    image: pierod0411/iam-service
+    ports:
+      - "8091:8081"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  profile-service:
+    image: pierod0411/profile-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      iam-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  profile-service-2:
+    image: pierod0411/profile-service
+    ports:
+      - "8092:8082"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      iam-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8092/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  appointment-service:
+    image: pierod0411/appointment-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  appointment-service-2:
+    image: pierod0411/appointment-service
+    ports:
+      - "8093:8083"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8093/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  management-service:
+    image: pierod0411/management-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  management-service-2:
+    image: pierod0411/management-service
+    ports:
+      - "8094:8084"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8094/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  post-service:
+    image: pierod0411/post-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  post-service-2:
+    image: pierod0411/post-service
+    ports:
+      - "8095:8085"
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eureka-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8095/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  iam-db-data:
+  profile-db-data:
+  appointment-db-data:
+  management-db-data:
+  post-db-data:
