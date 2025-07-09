@@ -1,7 +1,8 @@
-version: '3.8'
 services:
   config-service:
-    build: ./config-service
+    build:
+      context: .
+      dockerfile: config-service/Dockerfile
     ports:
       - "8888:8888"
     environment:
@@ -13,7 +14,10 @@ services:
       retries: 5
 
   eureka-service:
-    build: ./eureka-service
+    build:
+      context: .
+      
+      dockerfile: eureka-service/Dockerfile
     ports:
       - "8761:8761"
     depends_on:
@@ -26,7 +30,9 @@ services:
       retries: 5
 
   gateway-service:
-    build: ./gateway-service
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -121,7 +127,9 @@ services:
       retries: 5
 
   iam-service:
-    build: ./iam-service
+    build:
+      context: .
+      dockerfile: iam-service/Dockerfile
     ports:
       - "8094:8094"
     depends_on:
@@ -141,7 +149,9 @@ services:
       - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   profile-service:
-    build: ./profile-service
+    build:
+      context: .
+      dockerfile: profile-service/Dockerfile
     ports:
       - "8093:8093"
     depends_on:
@@ -163,7 +173,9 @@ services:
       - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   appointment-service:
-    build: ./appointment-service
+    build:
+      context: .
+      dockerfile: appointment-service/Dockerfile
     ports:
       - "8090:8090"
     depends_on:
@@ -185,7 +197,9 @@ services:
       - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   management-service:
-    build: ./management-service
+    build:
+      context: .
+      dockerfile: management-service/Dockerfile
     ports:
       - "8081:8081"
     depends_on:
@@ -207,7 +221,9 @@ services:
       - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   post-service:
-    build: ./post-service
+    build:
+      context: .
+      dockerfile: post-service/Dockerfile
     ports:
       - "8092:8092"
     depends_on:

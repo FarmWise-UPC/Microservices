@@ -118,7 +118,8 @@ public class WebSecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/error").permitAll()
+                                "/error",
+                                "/actuator/health").permitAll()
                         .anyRequest().authenticated())
                         .cors(Customizer.withDefaults());
         http.authenticationProvider(authenticationProvider());
