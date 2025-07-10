@@ -39,6 +39,86 @@ services:
       timeout: 5s
       retries: 5
 
+  iam-db:
+    image: mysql:8
+    container_name: iam-db
+    ports:
+      - "33061:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=iamdb
+    volumes:
+      - iam-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  profile-db:
+    image: mysql:8
+    container_name: profile-db
+    ports:
+      - "33065:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=profiledb
+    volumes:
+      - profile-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  appointment-db:
+    image: mysql:8
+    container_name: appointment-db
+    ports:
+      - "33062:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=appointmentdb
+    volumes:
+      - appointment-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  management-db:
+    image: mysql:8
+    container_name: management-db
+    ports:
+      - "33063:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=managementdb
+    volumes:
+      - management-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  post-db:
+    image: mysql:8
+    container_name: post-db
+    ports:
+      - "33064:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=postdb
+    volumes:
+      - post-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   iam-service:
     image: pierod0411/iam-service
     ports:
@@ -48,15 +128,16 @@ services:
         condition: service_healthy
       eureka-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      iam-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
   iam-service-2:
     image: pierod0411/iam-service
     ports:
@@ -66,14 +147,16 @@ services:
         condition: service_healthy
       eureka-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      iam-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   profile-service:
     image: pierod0411/profile-service
@@ -86,15 +169,17 @@ services:
         condition: service_healthy
       iam-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      profile-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      
   profile-service-2:
     image: pierod0411/profile-service
     ports:
@@ -106,14 +191,16 @@ services:
         condition: service_healthy
       iam-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      profile-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8092/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   appointment-service:
     image: pierod0411/appointment-service
@@ -126,14 +213,16 @@ services:
         condition: service_healthy
       profile-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      appointment-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   appointment-service-2:
     image: pierod0411/appointment-service
@@ -146,14 +235,16 @@ services:
         condition: service_healthy
       profile-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      appointment-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8093/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   management-service:
     image: pierod0411/management-service
@@ -166,14 +257,16 @@ services:
         condition: service_healthy
       profile-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      management-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   management-service-2:
     image: pierod0411/management-service
@@ -186,14 +279,16 @@ services:
         condition: service_healthy
       profile-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      management-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8094/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   post-service:
     image: pierod0411/post-service
@@ -206,14 +301,16 @@ services:
         condition: service_healthy
       profile-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      post-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
   post-service-2:
     image: pierod0411/post-service
@@ -226,14 +323,16 @@ services:
         condition: service_healthy
       profile-service:
         condition: service_healthy
-    environment:
-      - authorization.jwt.secret=${JWT_SECRET}
-      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      post-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8095/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    environment:
+      - authorization.jwt.secret=${JWT_SECRET}
+      - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
 
 volumes:
   iam-db-data:
