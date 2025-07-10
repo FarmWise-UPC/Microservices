@@ -44,4 +44,4 @@ eureka:
     status-page-url-path: /swagger-ui/index.html
 profiles:
   api:
-    url: http://profile-service:8093  # El puerto 8093 es el puerto del microservicio de perfil
+    url: http://gateway-service:8080

@@ -45,4 +45,4 @@ eureka:
 
 profiles:
   api:
-    url: http://profile-service:8093
+    url: http://gateway-service:8080

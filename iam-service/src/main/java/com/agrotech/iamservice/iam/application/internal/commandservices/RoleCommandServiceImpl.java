@@ -16,9 +16,12 @@ import java.util.Arrays;
 public class RoleCommandServiceImpl implements RoleCommandService {
 
     private final RoleRepository roleRepository;
+    private final boolean enableRoleSeeding;
 
     public RoleCommandServiceImpl(RoleRepository roleRepository) {
+
         this.roleRepository = roleRepository;
+        this.enableRoleSeeding = Boolean.parseBoolean(System.getenv().getOrDefault("SEED_ROLES", "true"));
     }
 
     /**
@@ -28,10 +31,15 @@ public class RoleCommandServiceImpl implements RoleCommandService {
      */
     @Override
     public void handle(SeedRolesCommand command) {
+        if (enableRoleSeeding) {
+            System.out.println("Role seeding is disabled via environment variable.");
+            return;
+        }
+
         Arrays.stream(Roles.values()).forEach(role -> {
-            if(!roleRepository.existsByName(role)) {
+            if (!roleRepository.existsByName(role)) {
                 roleRepository.save(new Role(Roles.valueOf(role.name())));
             }
-        } );
+        });
     }
 }

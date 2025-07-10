@@ -146,6 +146,7 @@ services:
     environment:
       - authorization.jwt.secret=${JWT_SECRET}
       - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      - SEED_ROLES=true
   iam-service-2:
     build:
       context: .
@@ -167,6 +168,7 @@ services:
     environment:
       - authorization.jwt.secret=${JWT_SECRET}
       - authorization.jwt.expiration.days=${JWT_EXPIRATION_DAYS}
+      - SEED_ROLES=false
 
   profile-service:
     build:

@@ -45,4 +45,4 @@ eureka:
 
 iam:
   api:
-    url: http://iam-service:8094
+    url: http://gateway-service:8080
